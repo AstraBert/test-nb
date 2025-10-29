@@ -18,5 +18,4 @@ jobs:
         run: uv python install
 
       - name: Run Mypy
-        working-directory: src
         run: make typecheck
