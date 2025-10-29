@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "test-nb"
 version = "0.1.0"
-description = "Add your description here"
+description = "Custom utilities to convert notebooks to python files and test them"
 readme = "README.md"
 requires-python = ">=3.10,<4"
 dependencies = [
