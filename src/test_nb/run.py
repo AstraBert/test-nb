@@ -71,7 +71,7 @@ class NotebookRunner:
                 if cell["cell_type"] == "markdown" and self.markdown_as_comment:
                     for line in cell["source"]:
                         if line.strip():
-                            script += "\t# " + line
+                            script += "\t# " + line + "\n"
                 elif cell["cell_type"] == "code":
                     bash = extract_bash(cell)
                     if bash:
@@ -99,7 +99,7 @@ class NotebookRunner:
         python_executable: str | None = None,
         timeout: float | None = None,
         verbose: bool = False,
-    ):
+    ) -> tuple[list[NotebookRunSuccess], list[NotebookRunFailure]]:
         succ: list[NotebookRunSuccess] = []
         fail: list[NotebookRunFailure] = []
         if len(self._files_to_exec) == 0:
@@ -133,9 +133,12 @@ class NotebookRunner:
                     }
                 )
                 cprint(f"{file} PASSED", color="green", attrs=["bold"])
+        print()
+        print()
         print("=========== TEST SUMMARY =============")
+        print()
         cprint(f"{len(succ)} tests were successfull", color="green", attrs=["bold"])
-        cprint(f"{len(fail)} tests failed:\n", color="red", attrs=["bold"])
+        cprint(f"{len(fail)} tests failed\n", color="red", attrs=["bold"])
         if len(fail) > 0:
             for f in fail:
                 print(f"\t- {f['file']}\n")
@@ -148,3 +151,4 @@ class NotebookRunner:
                     color="yellow",
                     attrs=["bold"],
                 )
+        return succ, fail

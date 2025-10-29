@@ -10,7 +10,16 @@ def extract_bash(cell: CodeCell) -> str | None:
         or lines[0].strip().startswith("%%sh")
         or lines[0].strip().startswith("%%script bash")
     ):
-        return " && ".join(lines).replace("%%", "# ")
+        sanitized_lines = []
+        for line in lines:
+            if (
+                sanitized_line := line.replace("%%bash", "")
+                .replace("%%sh", "")
+                .replace("%%script bash", "")
+                .strip()
+            ):
+                sanitized_lines.append(sanitized_line)
+        return " && ".join(sanitized_lines)
     script = ""
     for line in lines:
         l = line.strip()

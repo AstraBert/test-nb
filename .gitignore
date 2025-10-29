@@ -11,3 +11,6 @@ wheels/
 
 # caches
 *_cache/
+
+# converted test notebooks
+test_notebooks/*.py
