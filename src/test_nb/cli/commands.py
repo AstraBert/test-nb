@@ -20,8 +20,8 @@ def convert(
     overwrite: bool = False,
     no_errors: bool = False,
     exclude_env: bool = False,
-):
-    _convert_files_and_run_if_needed(
+) -> None:
+    retcode = _convert_files_and_run_if_needed(
         file=file,
         directory=directory,
         recursive=recursive,
@@ -30,6 +30,7 @@ def convert(
         no_errors=no_errors,
         exclude_env=exclude_env,
     )
+    sys.exit(retcode)
 
 
 @app.command(
@@ -68,8 +69,8 @@ def test(
     python_executable: str | None = None,
     verbose: bool = False,
     timeout: float | None = None,
-):
-    _convert_files_and_run_if_needed(
+) -> None:
+    retcode = _convert_files_and_run_if_needed(
         file=file,
         directory=directory,
         recursive=recursive,
@@ -83,6 +84,7 @@ def test(
             "verbose": verbose,
         },
     )
+    sys.exit(retcode)
 
 
 def _convert_files_and_run_if_needed(
@@ -94,7 +96,7 @@ def _convert_files_and_run_if_needed(
     no_errors: bool = False,
     exclude_env: bool = False,
     run_test_args: RunTestArgs | None = None,
-):
+) -> int:
     files: list[str] | None = None
     if file is not None and len(file) > 0:
         files = list(file)
@@ -113,12 +115,14 @@ def _convert_files_and_run_if_needed(
     try:
         runn.write_python_files(no_errors, overwrite)
     except Exception as e:
-        print(f"An error occurred: {e}")
-        raise click.Abort()
+        return 1
 
     if run_test_args is not None:
-        runn.run(
+        _, fail = runn.run(
             python_executable=run_test_args["python_executable"],
             timeout=run_test_args["timeout"],
             verbose=run_test_args["verbose"],
         )
+        return 1 if len(fail) > 0 else 0
+
+    return 0
