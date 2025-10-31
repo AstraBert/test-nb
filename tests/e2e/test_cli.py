@@ -32,7 +32,7 @@ def test_cli_run_tests(notebooks: tuple[str, ...]):
             run_test_args={"python_executable": None, "timeout": None, "verbose": True},
         )
         succ = True
-    except Exception as e:
+    except Exception:
         succ = False
     assert succ
     for file in notebooks:

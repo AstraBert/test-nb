@@ -45,8 +45,6 @@ def test_convert_files_base(runner: NotebookRunner) -> None:
                 )
             elif "with_env.ipynb" in f:
                 assert 'os.environ["SUPER_SECRET_KEY"] = "this is a key"' in content
-        except AssertionError as e:
-            raise e
         finally:
             os.remove(f)
 
@@ -84,8 +82,6 @@ def test_convert_files_markdown_as_comment(runner: NotebookRunner) -> None:
                 assert "# Now we **execute** the function:" in content
             elif "with_env.ipynb" in f:
                 assert "#" not in content
-        except AssertionError as e:
-            raise e
         finally:
             os.remove(f)
 
@@ -105,8 +101,6 @@ def test_convert_files_no_environ(runner: NotebookRunner) -> None:
         try:
             if "with_env.ipynb" in f:
                 assert 'os.environ["SUPER_SECRET_KEY"] = "this is a key"' not in content
-        except AssertionError as e:
-            raise e
         finally:
             os.remove(f)
 
